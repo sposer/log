@@ -1,0 +1,17 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenLocal()
+        maven {
+            url 'https://maven.aliyun.com/nexus/content/groups/public/'
+        }
+        mavenCentral()
+        maven {
+            url 'https://jitpack.io'
+        }
+        google()
+    }
+}
+rootProject.name = "log"
+include ':app'
+include ':log'

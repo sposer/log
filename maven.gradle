@@ -1,0 +1,61 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = config.lib.group_id  //sonatype平台创建的groupId
+                artifactId = config.lib.name
+                version = config.lib.version  //库版本名
+
+                project.ext["signing.keyId"] = config.key.id  //GPG指纹后8位
+                project.ext["signing.password"] = config.key.pwd  //GPG密码
+                project.ext["signing.secretKeyRingFile"] = config.key.path //GPG私钥
+
+                pom {
+                    name = config.lib.name
+                    description = config.lib.description
+                    url = config.developer.url  //github主页地址
+                    licenses {
+                        license {
+                            name = config.license.name
+                            url = config.license.url
+                        }
+                    }
+                    developers {
+                        developer {  //填开发者信息
+                            id = config.developer.id
+                            name = config.developer.name
+                            email = config.developer.email
+                        }
+                    }
+                    scm {
+                        connection = "scm:svn:$config.developer.url"   //后面为github主页地址
+                        developerConnection = "scm:svn:$config.developer.url"  //后面为github主页地址
+                        url = config.developer.url //github主页地址
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                name = config.maven.name
+                //allowInsecureProtocol true
+                //url config.maven.release_url
+                credentials {
+                    username = config.maven.username
+                    password = config.maven.password
+                }
+                def releasesRepoUrl = config.maven.release_url
+                def snapshotsRepoUrl = config.maven.snapshot_url
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            }
+        }
+    }
+    project.signing {
+        sign project.publishing.publications
+    }
+}
