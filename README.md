@@ -18,12 +18,6 @@
 2. 在子目录的build.gradle中添加：
 
     ``` java
-    plugins {
-        id 'com.android.application'
-        id 'kotlin-android'
-        //添加的
-        id 'io.objectbox'
-    }
     dependencies {
         //添加的
         implementation "top.heue.utils:log:1.3.0"
